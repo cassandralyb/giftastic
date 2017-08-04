@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Gif-Tastic</title>
+</head>
+
+<body>
+  <div id="buttons">
+    <button data-person="Babies">
+      Babies
+    </button>
+    <button data-person="Puppies">
+     Puppies
+    </button>
+
+    <button data-person="Kittens">
+        Kittens
+    </button>
+
+    <button data-person="Squirrels">
+        Squirrels
+    </button>
+
+    <button data-person="Ducklings">
+        Ducklings
+    </button>
+
+     <!-- New buttons will appear here.  -->
+    <div id="buttons-view"></div>
+
+    <form id="movie-form">
+      <label for="movie-input">Add a New Baby Animal</label>
+      <input type="text" id="movie-input"><br>
+
+      <!-- Button triggers new gif category to be added-->
+      <input id="add-gif" type="submit" value="Add a Baby Animal">
+    </form>
+
+    <!-- Movies will get dumped Dere -->
+    <div id="baby-view"></div>
+
+    <!-- **************************************** -->
+
+
+    <!-- STEP THREE: open this file in the browser and click on your buttons. If they don't work, then fix your buttons -->
+
+    <!-- STEP FOUR: go over the JavaScript with your partners, and explain the lines of code to each other. -->
+
+  </div>
+
+  <div id="gifs-appear-here">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $("button").on("click", function() {
+      var baby
+       = $(this).attr("data-baby");
+      var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
+        baby + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+      $.ajax({
+          url: queryURL,
+          method: "GET"
+        })
+        .done(function(response) {
+          var results = response.data;
+
+          for (var i = 0; i < results.length; i++) {
+            var gifDiv = $("<div class='item'>");
+
+            var rating = results[i].rating;
+
+            var p = $("<p>").text("Rating: " + rating);
+
+            var personImage = $("<img>");
+            personImage.attr("src", results[i].images.fixed_height.url);
+            
+
+            gifDiv.prepend(p);
+            gifDiv.prepend(personImage);
+
+            $("#gifs-appear-here").prepend(gifDiv);
+          }
+        });
+
+        // Function for displaying movie data
+      function renderButtons() {
+        // Deletes the movies prior to adding new movies
+        // (this is necessary otherwise you will have repeat buttons)
+        $("#buttons-view").empty();
+        // Loops through the array of movies
+        for (var i = 0; i < results.length; i++) {
+          // Then dynamicaly generates buttons for each movie in the array
+          // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+          var a = $("<button>");
+          // Adds a class of movie to our button
+          a.addClass("baby");
+          // Added a data-attribute
+          a.attr("data-baby", results[i]);
+          // Provided the initial button text
+          a.text(results[i]);
+          // Added the button to the buttons-view div
+          $("#buttons-view").append(a);
+        }
+      }
+
+    });
+  </script>
+</body>
+
+</html>
